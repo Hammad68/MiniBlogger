@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/main.css" />
+        <!-- External links for bootstrap & icon library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <title>Settings Page</title>
+    </head>
+
+    <body style="background: #1B2631;">
+
+        <!-- Header -->
+        <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
+            <!-- Left: Logo -->
+            <div class="navbar-brand mb-0">
+                <%- include('partials/logo') %>
+            </div>
+            <!-- Right: Back button -->
+            <div class="ml-auto">
+                <a href="/blog/back-to-author-homepage" class="btn btn-outline-light btn-sm">
+                    <i class="fa fa-arrow-circle-left"></i> Back
+                </a>
+            </div>
+        </header>
+
+
+        <!-- Main content -->
+        <main class="container my-5">
+
+            <!-- Heading -->
+            <div class="text-center text-white mb-5">
+                <hr class="my-4 bg-dark">
+                <h2 class="fw-bold">⚙️ Edit Blog Details</h2>
+                <p class="text-muted">Update your author name and blog title below</p>
+                <hr class="my-4 bg-dark">
+            </div>
+
+            <!-- Centered Form Card -->
+            <div class="d-flex justify-content-center">
+                <form id="edit-author-details" action="/blog/author-blog-setting" method="post"
+                    class="text-white p-5 rounded shadow-lg"
+                    style="max-width: 600px; width: 100%; background: linear-gradient(135deg, #0F3B47, #08525e); border-radius: 20px;">
+                
+                    <% names.forEach(name => { %>
+                        <!-- Author -->
+                        <div class="form-group mb-4">
+                        <label for="author_name" class="fw-bold">👤 Author</label>
+                        <input type="text" id="author_name" name="author_name" maxlength="20"
+                                class="form-control form-control-lg rounded-pill"
+                                value="<%= name.author_name %>" required>
+                        </div>
+
+                        <!-- Blog Title -->
+                        <div class="form-group mb-4">
+                        <label for="author_about" class="fw-bold">📖 About</label>
+                        <input type="text" id="author_about" name="author_about" maxlength="20"
+                                class="form-control form-control-lg rounded-pill"
+                                value="<%= name.author_about %>" required>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="text-center">
+                        <button type="submit" class="btn btn-info px-5 py-2 rounded-pill shadow-sm">
+                            💾 Save Changes
+                        </button>
+                        </div>
+                    <% }); %>
+                </form>
+            </div>
+
+        </main>
+
+        
+        <!-- Client-side JavaScript -->
+        <script>
+            // For enabling and disabling save changes button to edit the  author info
+            document.addEventListener('DOMContentLoaded', () => {
+
+                // Getting the form input feilds' values
+                const form = document.getElementById("edit-author-details");
+                const saveButton = form.querySelector('button[type="submit"]');
+                const titleField = document.getElementById("author_name");
+                const contentField = document.getElementById("author_about");
+
+                // Storing the original values
+                const orgTitle = titleField.value;
+                const orgContent = contentField.value;
+
+                // Check to enable saveChanges button, if something changed
+                [titleField, contentField].forEach(i => i.addEventListener('input', () => {
+                    saveButton.disabled = (titleField.value == orgTitle && contentField.value == orgContent);
+                }));
+
+                // Start with saveChanges button disabled
+                saveButton.disabled = true;
+            });
+        </script>
+
+    </body>
+
+</html>

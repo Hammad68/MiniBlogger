@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <!-- External links for bootstrap & icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title><%= blog.blog_title %></title>
+  </head>
+
+  <body style="background: #1B2631;">
+
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
+      <!-- Left: Logo -->
+      <div class="navbar-brand mb-0">
+        <%- include('partials/logo') %>
+      </div>
+      <!-- Right: Back button -->
+      <div class="ml-auto">
+        <a href="/blog/back-to-reader-homepage" class="btn btn-outline-light btn-sm">
+          <i class="fa fa-arrow-circle-left"></i> Back
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+
+      <!-- Blog Section -->
+      <div class="bg-dark text-white p-5 rounded shadow-lg">
+        <!-- Blog Title -->
+        <h1 class="display-4 font-weight-bold mb-3 text-center">
+          <%= blog.blog_title %>
+        </h1>
+        <!-- Meta Info -->
+        <div class="text-center text-muted mb-4">
+          <small>
+            Published: <%= blog.publishedAgo %> • 
+            Views: <%= blog.blog_reads %> • 
+            Likes: <%= blog.blog_likes %>
+          </small>
+        </div>
+        <!-- Like Button -->
+        <div class="text-center mb-4">
+          <form action="/blog/like-blog/<%= blog.publish_id %>" method="post">
+            <button class="btn btn-outline-light btn-lg rounded-pill px-4">
+              <i class="fa fa-thumbs-up"></i> Like
+            </button>
+          </form>
+        </div>
+        <!-- Blog Content -->
+        <article class="blog-content mt-4" style="line-height: 1.8;">
+          <p><%= blog.blog_content %></p>
+        </article>
+      </div>
+
+
+      <!-- Comment Form -->
+      <div class="mt-5 bg-gradient p-4 rounded shadow" style="background: linear-gradient(135deg, #0F3B47, #08525e);">
+        <h3 class="text-white mb-3">Leave a Comment</h3>
+        <form action="/blog/add-comment" method="post" class="text-white">
+          <input type="hidden" name="publish_id" value="<%= blog.publish_id %>">
+          <!-- Name -->
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" class="form-control" maxlength="20" required>
+          </div>
+          <!-- Comment -->
+          <div class="form-group">
+            <label for="comment">Comment</label>
+            <textarea id="comment" name="comment" class="form-control" maxlength="50" rows="3" required></textarea>
+          </div>
+          <!-- Submit -->
+          <button type="submit" class="btn btn-success rounded-pill px-4">Post Comment</button>
+        </form>
+      </div>
+
+
+      <!-- Previous Comments -->
+      <div class="mt-5">
+        <h3 class="text-center text-white mb-4">Reader Comments</h3>
+        <% comments.forEach(comment => { %>
+          <div class="bg-dark text-white p-3 rounded shadow-sm mb-3">
+            <strong class="d-block"><%= comment.commentator_name %></strong>
+            <p class="mb-1"><%= comment.comment %></p>
+            <small class="text-muted d-block mb-2"><%= comment.formattedDate %></small>
+            <form action="/blog/comment-like/<%= comment.comment_id %>" method="post" class="d-inline">
+              <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1">
+                <i class="fa fa-thumbs-up"></i> <span class="ml-1"><%= comment.comment_likes %></span>
+              </button>
+            </form>
+          </div>
+        <% }); %>
+      </div>
+
+    </main>
+
+  </body>
+
+</html>

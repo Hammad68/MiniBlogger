@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/main.css" />
+        <!-- External links for bootstrap & icon library -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <title>Author Home-Page</title>
+    </head>
+
+    <body style="background: #1B2631;">
+
+        <!-- Header -->
+        <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
+            <!-- Left: Back button -->
+            <a href="/blog/back-to-homepage" class="btn btn-outline-light btn-sm mr-3">
+                <i class="fa fa-arrow-circle-left"></i> Back
+            </a>
+            <!-- Center: Logo -->
+            <div class="mx-auto text-center">
+                <%- include('partials/logo') %>
+            </div>
+            <!-- Right: Settings -->
+            <a href="/blog/settings" class="text-light" style="font-size: 24px;">
+                <i class="fa fa-gear fa-spin"></i>
+            </a>
+        </header>
+
+
+        <!-- Main content -->
+        <main class="container text-white">
+
+            <!-- Three-part Greeting Badge -->
+            <div class="container my-4">
+                <% names.forEach(name => { %>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-4 shadow-sm" style="background: linear-gradient(90deg, #0F3B47, #08525e); border-radius: 20px;">
+                    <!-- Left: Greeting -->
+                    <div class="mb-3 mb-md-0 text-white">
+                        <h3 class="mb-1">Welcome, <strong><%= name.author_name %></strong>!</h3>
+                        <p class="mb-0" style="color: rgb(177, 169, 169);">
+                        Glad to see you back.
+                        </p>
+                    </div>
+                    <!-- Right: About Info -->
+                    <div class="text-white" style="max-width: 400px;">
+                        <h5 class="mb-2">You're</h5>
+                        <p style="color: rgb(177, 169, 169);"><%= name.author_about %></p>
+                    </div>
+
+                    </div>
+                <% }); %>
+            </div>
+
+            
+            <!-- Section listing draft blogs with options to edit, delete, or publish -->
+            <div class="container my-5">
+                <hr class="my-4 bg-dark">
+                <h4>Drafts</h4>
+                <hr class="my-4 bg-light">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Modified</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <!-- Data is being received from the database when the webpage is being rendered -->
+                        <tbody>
+                            <% drafted.forEach(blog=> { %>
+                                <tr style="color: rgb(177, 169, 169); background: #08525e; transition: background 0.3s;">
+                                    <td>
+                                        <%= blog.blog_title %>
+                                    </td>
+                                    <td>
+                                        <%= blog.createdAgo %>
+                                    </td>
+                                    <td>
+                                        <%= blog.modifiedAgo || 'N/A' %>
+                                    </td>
+                                    <td>
+                                        <!-- Button for deleting blog from draft section a post route is handling this task by deleting this blog from the sql table -->
+                                        <form action="/blog/delete-blog" method="post" style="display:inline;">
+                                            <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        <!-- A link to redirect the user to the blog's edit page handled by a route to redirect the user -->
+                                        <a href="/blog/edit-blog/<%= blog.blog_id %>"
+                                            class="btn btn-primary btn-sm">Edit</a>
+                                        <!-- A button to publish the blog means deleting them from the current section and sql table where that is stored and add them to publish blog sql table -->
+                                        <form action="/blog/publish-blog" method="post" style="display:inline;">
+                                            <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
+                                            <button type="submit" class="btn btn-success btn-sm">Publish</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                    <!-- For redirecting the user to create draft page inorder to add a new blog in the database and to display that on author homepage -->
+                    <a href="/blog/create-draft" class="btn btn-primary">Create</a>
+                </div>
+            </div>
+
+
+            <!-- Section listing published blogs -->
+            <div class="container my-5">
+                <hr class="my-4 bg-dark">
+                <h4>Published</h4>
+                <hr class="my-4 bg-light">
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark shadow-sm rounded">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Created</th>
+                                <th scope="col">Modified</th>
+                                <th scope="col">Published</th>
+                                <th scope="col">Reads</th>
+                                <th scope="col">Likes</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data is being received from the database when the webpage is being rendered -->
+                            <% published.forEach(blog=> { %>
+                                <tr class="text-white tr-light" style="background: #08525e; transition: background 0.3s;">
+                                    <td>
+                                        <%= blog.blog_title %>
+                                    </td>
+                                    <td>
+                                        <%= blog.createdAgo %>
+                                    </td>
+                                    <td>
+                                        <%= blog.modifiedAgo || 'N/A' %>
+                                    </td>
+                                    <td>
+                                        <%= blog.publishedAgo %>
+                                    </td>
+                                    <td>
+                                        <%= blog.blog_reads %>
+                                    </td>
+                                    <td>
+                                        <%= blog.blog_likes %>
+                                    </td>
+                                    <td>
+                                        <!-- Deleting the published blog from the publised section and published sql table -->
+                                        <form action="/blog/delete-publishedblog" method="post" style="display:inline;">
+                                            <input type="hidden" name="publish_id" value="<%= blog.publish_id %>">
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                        <!-- For redirecting the user to the blog's page to view the blog handled by a route to redirect to a specified page -->
+                                        <form action="/blog/reader-blog/<%= blog.publish_id %>" method="get"
+                                            style="display:inline;">
+                                            <button type="submit" class="btn btn-primary btn-sm">View</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </main>
+
+    </body>
+
+</html>

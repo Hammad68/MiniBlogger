@@ -1,0 +1,45 @@
+/* Styles apply to all the pages */
+body {
+  background: #1B2631;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: linear-gradient(to right, #2C3E50, #1B2631);
+  /* color: #FFFFFF; White for header text for better readability */
+  padding: 20px;
+}
+
+/* Logo CSS - shades based on your theme color */
+.m1  { color: #E0E0E0; }  /* light gray */
+.m2  { color: #B1A9A9; }  
+.m3  { color: #A0A0A0; }  
+.m4  { color: #C0C0C0; }  
+.m5  { color: #D0D0D0; }  
+.m6  { color: #B1A9A9; }  
+.m7  { color: #E0E0E0; }  
+.m8  { color: #C0C0C0; }  
+.m9  { color: #A0A0A0; }  
+.m10 { color: #B1A9A9; transform: rotate(-10deg); display:inline-block; }  
+.m11 { color: #E0E0E0; }
+.miniblogger-logo {
+  font-family: 'Product Sans', sans-serif;
+  font-size: 32px;
+  letter-spacing: -4px; /* tighter spacing */
+}
+
+/* Reader article page CSS */
+/* For blog text */
+.blog-content p {
+  font-size: 1.1rem;
+  color: rgb(220, 220, 220);
+}
+/* For comment section */
+.bg-gradient {
+  background: linear-gradient(135deg, #0F3B47, #08525e);
+}
+/* For the back button */
+.btn-outline-light:hover {
+  background-color: #08525e;
+  border-color: #08525e;
+}

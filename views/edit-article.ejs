@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <!-- External links for bootstrap & icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Edit blog Page</title>
+  </head>
+
+  <body style="background: #1B2631;">
+
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
+      <!-- Left: Logo -->
+      <div class="navbar-brand mb-0">
+        <%- include('partials/logo') %>
+      </div>
+      <!-- Right: Back button -->
+      <div class="ml-auto">
+        <a href="/blog/back-to-author-homepage" class="btn btn-outline-light btn-sm">
+          <i class="fa fa-arrow-circle-left"></i> Back
+        </a>
+      </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="container my-5">
+
+      <!-- Blog Info -->
+      <div class="d-flex justify-content-around mb-4 flex-wrap gap-3">
+        <p class="text-white px-3 py-2 rounded shadow-sm" style="background: #08525e;">
+          Created: <%= blog.createdAgo %>
+        </p>
+        <p class="text-white px-3 py-2 rounded shadow-sm" style="background: #08525e;">
+          Modified: <%= blog.modifiedAgo %>
+        </p>
+        <p class="text-white px-3 py-2 rounded shadow-sm" style="background: #08525e;">
+          Status: <%= blog.blog_status %>
+        </p>
+      </div>
+
+      <hr class="my-4 bg-dark">
+      
+      <!-- Edit Blog Form -->
+      <div class="d-flex justify-content-center">
+        <form id="edit-blog"  action="/blog/update-blog/<%= blog.blog_id %>" method="post" class="text-white p-5 rounded shadow-lg" style="max-width: 700px; width: 100%; background: linear-gradient(135deg, #0F3B47, #08525e); border-radius: 20px;">
+          <!-- Heading -->
+          <div class="text-center mb-4">
+            <h2 class="fw-bold">✏️ Edit Blog</h2>
+          </div>
+          <!-- Title -->
+          <div class="form-group mb-4">
+            <label for="title" class="fw-bold">Title</label>
+            <input type="text" id="title" name="title" maxlength="20" 
+                  class="form-control form-control-lg rounded-pill"
+                  value="<%= blog.blog_title %>" required>
+          </div>
+          <!-- Content -->
+          <div class="form-group mb-4">
+            <label for="content" class="fw-bold">Content</label>
+            <textarea id="content" name="content" maxlength="400" 
+              class="form-control rounded"
+              style="height: 250px; resize: vertical;" required><%= blog.blog_content %></textarea>
+          </div>
+          <!-- Submit -->
+          <div class="text-center">
+            <button type="submit" class="btn btn-info px-5 py-2 rounded-pill">
+              💾 Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </main>
+
+
+    <!-- Client-side JavaScript -->
+    <script>
+      // For enabling and disabling save changes button to edit the blog
+      document.addEventListener('DOMContentLoaded', () => {
+
+        // Getting the form input feilds' values
+        const form = document.getElementById("edit-blog");
+        const saveButton = form.querySelector('button[type="submit"]');
+        const titleField = document.getElementById("title");
+        const contentField = document.getElementById("content");
+
+        // Storing the original values
+        const orgTitle = titleField.value;
+        const orgContent = contentField.value;
+
+        // Check to enable saveChanges button, if something changed
+        [titleField, contentField].forEach(i => i.addEventListener('input', () => {
+            saveButton.disabled = (titleField.value == orgTitle && contentField.value == orgContent);
+        }));
+
+        // Start with saveChanges button disabled
+        saveButton.disabled = true;
+      });
+    </script>
+
+  </body>
+
+</html>
