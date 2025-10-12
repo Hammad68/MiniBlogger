@@ -1,48 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/main.css" />
-    <!-- External links for bootstrap & icon library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <title>Home Page</title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniBlogger | Home</title>
 
-  <body style="background: #1B2631;">
+  <!-- Bootstrap & Font Awesome -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 
-    <!-- Header -->
-    <header class="navbar navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
-      <!-- Center: Logo -->
-      <div class="mx-auto">
-        <%- include('partials/logo') %>
-      </div>
-    </header>
+<body style="background-color: #1B2631;">
 
+  <!-- Header -->
+  <header class="navbar navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
+    <div class="mx-auto">
+      <%- include('partials/logo') %>
+    </div>
+  </header>
 
-    <!-- Main Content -->
-    <main>
+  <!-- Main Content -->
+  <main class="container text-center mt-5">
+    <div class="mb-5">
+      <h1 class="text-info font-weight-bold">Welcome to MiniBlogger</h1>
+      <p class="text-light mt-3 mb-4 lead">
+        Write, share, and explore blogs — all in one place.
+      </p>
+    </div>
 
-      <!-- Links Section -->
-      <div class="d-flex justify-content-center align-items-center" style="height: 60vh;">
-        <div class="p-5 rounded shadow-lg text-center" style="background: linear-gradient(135deg, #0F3B47, #08525e); border-radius: 20px;">
-          <h3 class="text-white mb-4">Choose Below</h3>
-          <!-- Author Home -->
-          <a href="/blog/author-homepage" class="btn btn-info btn-lg px-5 py-2 mb-3 rounded-pill">
-            Author Home-Page
-          </a>
-          <br>
-          <!-- Reader Home -->
-          <a href="/blog/reader-homepage" class="btn btn-info btn-lg px-5 py-2 rounded-pill">
-            Reader Home-Page
-          </a>
+    <!-- Cards Section -->
+    <div class="row justify-content-center">
+
+      <!-- Author Section -->
+      <div class="col-md-5 mb-4">
+        <div class="card shadow-lg border-0 h-100" style="background-color: #08525e; border-radius: 15px;">
+          <div class="card-body">
+            <i class="fa fa-pencil fa-3x mb-3 text-light"></i>
+            <h4 class="card-title text-light">Author Home</h4>
+            <p class="text-light mt-3">
+               Write and publish your own blogs.
+            </p>
+            <a href="/blog/author-homepage" class="btn btn-info btn-lg mt-3 rounded-pill px-4">
+              Go to Author Home
+            </a>
+          </div>
         </div>
       </div>
 
-    </main>
+      <!-- Reader Section -->
+      <div class="col-md-5 mb-4">
+        <div class="card shadow-lg border-0 h-100" style="background-color: #08525e; border-radius: 15px;">
+          <div class="card-body">
+            <i class="fa fa-book fa-3x mb-3 text-light"></i>
+            <h4 class="card-title text-light">Reader Home</h4>
+            <p class="text-light mt-3">
+              Discover and enjoy blogs from others.
+            </p>
+            <a href="/blog/reader-homepage" class="btn btn-info btn-lg mt-3 rounded-pill px-4">
+              Go to Reader Home
+            </a>
+          </div>
+        </div>
+      </div>
 
-  </body>
+    </div>
 
+    <!-- Short Tip Section -->
+    <div class="mt-5 text-light">
+      <p class="lead mb-0">
+        💡 <strong>Blogging is a conversation, not a code.</strong> 
+      </p>
+    </div>
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>
