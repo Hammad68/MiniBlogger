@@ -1,104 +1,457 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/main.css" />
-    <!-- External links for bootstrap & icon library -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <title><%= blog.blog_title %></title>
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <title><%= blog.blog_title %></title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <body style="background: #1B2631;">
+    :root {
+      --bg: #0a0e13;
+      --surface: #111820;
+      --surface2: #16202b;
+      --border: rgba(255,255,255,0.06);
+      --accent: #38bdf8;
+      --accent2: #f472b6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --radius: 16px;
+    }
 
-    <!-- Header -->
-    <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
-      <!-- Left: Logo -->
-      <div class="navbar-brand mb-0">
-        <%- include('partials/logo') %>
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glow background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(56,189,248,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10, 14, 19, 0.85);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(56,189,248,0.05);
+      transform: translateX(-2px);
+    }
+
+    /* MAIN */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* BLOG CARD */
+    .blog-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .blog-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .blog-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+      margin-bottom: 1.25rem;
+      color: #f1f5f9;
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    .meta-item i { color: var(--accent); font-size: 0.75rem; }
+
+    .like-form { margin-bottom: 2rem; }
+
+    .btn-like {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid rgba(56,189,248,0.3);
+      background: rgba(56,189,248,0.05);
+      color: var(--accent);
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-like:hover {
+      background: rgba(56,189,248,0.12);
+      border-color: var(--accent);
+      transform: scale(1.03);
+    }
+
+    .btn-like:active { transform: scale(0.97); }
+
+    /* ARTICLE */
+    .blog-content {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #94a3b8;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0 1.5rem;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* COMMENT FORM */
+    .comment-form-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .comment-form-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    textarea.form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    textarea.form-input:focus { border-color: var(--accent); }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.65rem 1.5rem;
+      background: linear-gradient(135deg, var(--accent), #0ea5e9);
+      color: #0a0e13;
+      border: none;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-submit:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(56,189,248,0.3); }
+
+    /* COMMENTS */
+    .comment-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 0.85rem;
+      transition: border-color 0.2s;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .comment-card:hover { border-color: rgba(255,255,255,0.12); }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.6rem;
+    }
+
+    .comment-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0a0e13;
+      flex-shrink: 0;
+    }
+
+    .comment-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .comment-date {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .comment-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 0.85rem;
+    }
+
+    .btn-comment-like {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.3rem 0.9rem;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-comment-like:hover {
+      border-color: #818cf8;
+      color: #818cf8;
+      background: rgba(129,140,248,0.05);
+    }
+
+    .no-comments {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .blog-card { padding: 2rem 1.5rem; }
+      .comment-form-card { padding: 1.5rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="/" class="logo">Mini<span>Blogger</span></a>
+    <a href="/blog/back-to-reader-homepage" class="btn-back">
+      <i class="fa fa-arrow-left"></i> Back
+    </a>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+
+    <!-- Blog Section -->
+    <div class="blog-card">
+      <h1 class="blog-title"><%= blog.blog_title %></h1>
+
+      <div class="blog-meta">
+        <span class="meta-item"><i class="fa fa-clock-o"></i> <%= blog.publishedAgo %></span>
+        <span class="meta-item"><i class="fa fa-eye"></i> <%= blog.blog_reads %> views</span>
+        <span class="meta-item"><i class="fa fa-heart"></i> <%= blog.blog_likes %> likes</span>
       </div>
-      <!-- Right: Back button -->
-      <div class="ml-auto">
-        <a href="/blog/back-to-reader-homepage" class="btn btn-outline-light btn-sm">
-          <i class="fa fa-arrow-circle-left"></i> Back
-        </a>
-      </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container my-5">
-
-      <!-- Blog Section -->
-      <div class="bg-dark text-white p-5 rounded shadow-lg">
-        <!-- Blog Title -->
-        <h1 class="display-4 font-weight-bold mb-3 text-center">
-          <%= blog.blog_title %>
-        </h1>
-        <!-- Meta Info -->
-        <div class="text-center text-muted mb-4">
-          <small>
-            Published: <%= blog.publishedAgo %> • 
-            Views: <%= blog.blog_reads %> • 
-            Likes: <%= blog.blog_likes %>
-          </small>
-        </div>
-        <!-- Like Button -->
-        <div class="text-center mb-4">
-          <form action="/blog/like-blog/<%= blog.publish_id %>" method="post">
-            <button class="btn btn-outline-light btn-lg rounded-pill px-4">
-              <i class="fa fa-thumbs-up"></i> Like
-            </button>
-          </form>
-        </div>
-        <!-- Blog Content -->
-        <article class="blog-content mt-4" style="line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;">
-          <p><%= blog.blog_content %></p>
-        </article>
-      </div>
-
-
-      <!-- Comment Form -->
-      <div class="mt-5 bg-gradient p-4 rounded shadow" style="background: linear-gradient(135deg, #0F3B47, #08525e);">
-        <h3 class="text-white mb-3">Leave a Comment</h3>
-        <form action="/blog/add-comment" method="post" class="text-white">
-          <input type="hidden" name="publish_id" value="<%= blog.publish_id %>">
-          <!-- Name -->
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" class="form-control" maxlength="20" required>
-          </div>
-          <!-- Comment -->
-          <div class="form-group">
-            <label for="comment">Comment</label>
-            <textarea id="comment" name="comment" class="form-control" maxlength="50" rows="3" required></textarea>
-          </div>
-          <!-- Submit -->
-          <button type="submit" class="btn btn-success rounded-pill px-4">Post Comment</button>
+      <div class="like-form">
+        <form action="/blog/like-blog/<%= blog.blog_id %>" method="post">
+          <button class="btn-like" type="submit">
+            <i class="fa fa-thumbs-up"></i> Like this post
+          </button>
         </form>
       </div>
 
+      <article class="blog-content"><%- blog.blog_content %></article>
+    </div>
 
-      <!-- Previous Comments -->
-      <div class="mt-5">
-        <h3 class="text-center text-white mb-4">Reader Comments</h3>
-        <% comments.forEach(comment => { %>
-          <div class="bg-dark text-white p-3 rounded shadow-sm mb-3">
-            <strong class="d-block"><%= comment.commentator_name %></strong>
-            <p class="mb-1"><%= comment.comment %></p>
-            <small class="text-muted d-block mb-2"><%= comment.formattedDate %></small>
-            <form action="/blog/comment-like/<%= comment.comment_id %>" method="post" class="d-inline">
-              <button class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1">
-                <i class="fa fa-thumbs-up"></i> <span class="ml-1"><%= comment.comment_likes %></span>
-              </button>
-            </form>
-          </div>
-        <% }); %>
+
+    <!-- Comment Form -->
+    <div class="section-divider"><span class="section-label">Join the conversation</span></div>
+
+    <div class="comment-form-card">
+      <h3>Leave a Comment</h3>
+      <form action="/blog/add-comment" method="post">
+        <input type="hidden" name="publish_id" value="<%= blog.blog_id %>">
+        <label class="form-label" for="comment">Your thoughts</label>
+        <textarea id="comment" name="comment" class="form-input" maxlength="50" rows="3" required placeholder="Share your thoughts..."></textarea>
+        <button type="submit" class="btn-submit">
+          <i class="fa fa-paper-plane"></i> Post Comment
+        </button>
+      </form>
+    </div>
+
+
+    <!-- Comments List -->
+    <div class="section-divider"><span class="section-label">Public Opinion</span></div>
+
+    <% if (comments.length === 0) { %>
+      <div class="no-comments">
+        <i class="fa fa-comment-o" style="font-size:2rem; margin-bottom:0.75rem; display:block; opacity:0.3;"></i>
+        No comments yet. Be the first to share your thoughts.
       </div>
+    <% } %>
 
-    </main>
+    <% comments.forEach((comment, i) => { %>
+      <div class="comment-card" style="animation-delay: <%= i * 0.05 %>s">
+        <div class="comment-header">
+          <div class="comment-avatar"><%= comment.commentator_name ? comment.commentator_name[0].toUpperCase() : '?' %></div>
+          <span class="comment-name"><%= comment.commentator_name %></span>
+          <span class="comment-date"><%= comment.formattedDate %></span>
+        </div>
+        <p class="comment-text"><%= comment.comment %></p>
+        <form action="/blog/comment-like/<%= comment.comment_id %>" method="post" style="display:inline;">
+          <input type="hidden" name="publish_id" value="<%= blog.blog_id %>">
+          <button class="btn-comment-like" type="submit">
+            <i class="fa fa-thumbs-up"></i> <%= comment.comment_likes %>
+          </button>
+        </form>
+      </div>
+    <% }); %>
 
-  </body>
+  </main>
 
+</body>
 </html>

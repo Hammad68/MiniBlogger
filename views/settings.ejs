@@ -1,105 +1,272 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/main.css" />
-        <!-- External links for bootstrap & icon library -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>Settings Page</title>
-    </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniBlogger | Settings</title>
 
-    <body style="background: #1B2631;">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/main.css" />
 
-        <!-- Header -->
-        <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
-            <!-- Left: Logo -->
-            <div class="navbar-brand mb-0">
-                <%- include('partials/logo') %>
-            </div>
-            <!-- Right: Back button -->
-            <div class="ml-auto">
-                <a href="/blog/back-to-author-homepage" class="btn btn-outline-light btn-sm">
-                    <i class="fa fa-arrow-circle-left"></i> Back
-                </a>
-            </div>
-        </header>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0d1117;
+      background-image:
+        radial-gradient(ellipse at 20% 55%, rgba(99,179,237,.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 15%, rgba(154,117,234,.05) 0%, transparent 55%);
+      min-height: 100vh;
+      margin: 0;
+      color: #f0f6fc;
+    }
 
-        <!-- Main content -->
-        <main class="container my-5">
+    /* ─── Header ─── */
+    .site-header {
+      background: rgba(13,17,23,.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-            <!-- Heading -->
-            <div class="text-center text-white mb-5">
-                <hr class="my-4 bg-dark">
-                <h2 class="fw-bold">⚙️ Edit Blog Details</h2>
-                <p class="text-muted">Update your author name and blog title below</p>
-                <hr class="my-4 bg-dark">
-            </div>
+    .site-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      color: #fff;
+      letter-spacing: -.02em;
+      margin: 0;
+    }
+    .site-logo span { color: #63b3ed; }
 
-            <!-- Centered Form Card -->
-            <div class="d-flex justify-content-center">
-                <form id="edit-author-details" action="/blog/author-blog-setting" method="post"
-                    class="text-white p-5 rounded shadow-lg"
-                    style="max-width: 600px; width: 100%; background: linear-gradient(135deg, #0F3B47, #08525e); border-radius: 20px;">
-                
-                    <% names.forEach(name => { %>
-                        <!-- Author -->
-                        <div class="form-group mb-4">
-                        <label for="author_name" class="fw-bold">👤 Author</label>
-                        <input type="text" id="author_name" name="author_name" maxlength="20"
-                                class="form-control form-control-lg rounded-pill"
-                                value="<%= name.author_name %>" required>
-                        </div>
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.1);
+      color: #8b949e;
+      font-family: 'Inter', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      padding: .38rem .85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .btn-back:hover { border-color: rgba(99,179,237,.5); color: #63b3ed; background: rgba(99,179,237,.07); text-decoration: none; }
 
-                        <!-- Blog Title -->
-                        <div class="form-group mb-4">
-                        <label for="author_about" class="fw-bold">📖 About</label>
-                        <input type="text" id="author_about" name="author_about" maxlength="20"
-                                class="form-control form-control-lg rounded-pill"
-                                value="<%= name.author_about %>" required>
-                        </div>
+    /* ─── Layout ─── */
+    .settings-layout {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
 
-                        <!-- Submit -->
-                        <div class="text-center">
-                        <button type="submit" class="btn btn-info px-5 py-2 rounded-pill shadow-sm">
-                            💾 Save Changes
-                        </button>
-                        </div>
-                    <% }); %>
-                </form>
-            </div>
+    /* ─── Card ─── */
+    .settings-card {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 28px 64px rgba(0,0,0,.55);
+      animation: slideUp .5s cubic-bezier(.22,1,.36,1) both;
+    }
 
-        </main>
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-        
-        <!-- Client-side JavaScript -->
-        <script>
-            // For enabling and disabling save changes button to edit the  author info
-            document.addEventListener('DOMContentLoaded', () => {
+    /* ─── Card brand ─── */
+    .card-brand {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-                // Getting the form input feilds' values
-                const form = document.getElementById("edit-author-details");
-                const saveButton = form.querySelector('button[type="submit"]');
-                const titleField = document.getElementById("author_name");
-                const contentField = document.getElementById("author_about");
+    .brand-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px; height: 54px;
+      background: linear-gradient(135deg, #1e3a5f, #2d4a7a);
+      border-radius: 14px;
+      margin-bottom: .85rem;
+      box-shadow: 0 4px 18px rgba(99,179,237,.2);
+    }
+    .brand-icon i { font-size: 1.4rem; color: #63b3ed; }
 
-                // Storing the original values
-                const orgTitle = titleField.value;
-                const orgContent = contentField.value;
+    .card-brand h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      color: #f0f6fc;
+      margin-bottom: .3rem;
+    }
+    .card-brand p {
+      font-size: .82rem;
+      color: #8b949e;
+      font-weight: 300;
+      margin: 0;
+    }
 
-                // Check to enable saveChanges button, if something changed
-                [titleField, contentField].forEach(i => i.addEventListener('input', () => {
-                    saveButton.disabled = (titleField.value == orgTitle && contentField.value == orgContent);
-                }));
+    /* ─── Form ─── */
+    .form-group-custom { margin-bottom: 1.2rem; }
 
-                // Start with saveChanges button disabled
-                saveButton.disabled = true;
-            });
-        </script>
+    .form-label-custom {
+      display: block;
+      font-size: .73rem;
+      font-weight: 600;
+      color: #8b949e;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .38rem;
+    }
 
-    </body>
+    .input-custom {
+      width: 100%;
+      background: #0d1117;
+      border: 1.5px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      color: #f0f6fc;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      padding: .65rem .9rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+    .input-custom::placeholder { color: #484f58; }
+    .input-custom:focus {
+      border-color: #63b3ed;
+      box-shadow: 0 0 0 3px rgba(99,179,237,.15);
+    }
 
+    .char-hint {
+      font-size: .72rem;
+      color: #484f58;
+      margin-top: .3rem;
+      text-align: right;
+    }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,.07);
+      margin: 1.5rem 0;
+    }
+
+    /* ─── Submit button ─── */
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      padding: .7rem 1rem;
+      cursor: pointer;
+      letter-spacing: .02em;
+      transition: opacity .2s, transform .15s;
+      background: linear-gradient(135deg, #1d6fa4, #2563eb);
+    }
+    .btn-submit:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+      transform: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-logo">Mini<span>Blogger</span></div>
+    <a href="/blog/back-to-author-homepage" class="btn-back">
+      <i class="fa fa-arrow-left"></i> Back
+    </a>
+  </header>
+
+  <!-- Settings -->
+  <div class="settings-layout">
+    <div class="settings-card">
+
+      <!-- Brand -->
+      <div class="card-brand">
+        <div class="brand-icon"><i class="fa fa-gear"></i></div>
+        <h2>Edit Profile</h2>
+        <p>Update your author name and bio below</p>
+      </div>
+
+      <% names.forEach(name => { %>
+      <form id="edit-author-details" action="/blog/author-blog-setting" method="post">
+
+        <!-- Author Name -->
+        <div class="form-group-custom">
+          <label for="author_name" class="form-label-custom">Author Name</label>
+          <input type="text" class="input-custom" id="author_name" name="author_name"
+                 maxlength="20" value="<%= name.name %>" placeholder="Your display name" required>
+          <div class="char-hint">Max 20 characters</div>
+        </div>
+
+        <!-- About -->
+        <div class="form-group-custom">
+          <label for="author_about" class="form-label-custom">About</label>
+          <input type="text" class="input-custom" id="author_about" name="author_about"
+                 maxlength="20" value="<%= name.about %>" placeholder="A short bio" required>
+          <div class="char-hint">Max 20 characters</div>
+        </div>
+
+        <hr class="form-divider">
+
+        <button type="submit" class="btn-submit" id="save-btn" disabled>
+          <i class="fa fa-floppy-o"></i> &nbsp;Save Changes
+        </button>
+
+      </form>
+      <% }); %>
+
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form       = document.getElementById('edit-author-details');
+      const saveBtn    = document.getElementById('save-btn');
+      const nameField  = document.getElementById('author_name');
+      const aboutField = document.getElementById('author_about');
+
+      const origName  = nameField.value;
+      const origAbout = aboutField.value;
+
+      [nameField, aboutField].forEach(input => {
+        input.addEventListener('input', () => {
+          saveBtn.disabled = (nameField.value === origName && aboutField.value === origAbout);
+        });
+      });
+    });
+  </script>
+
+</body>
 </html>

@@ -1,0 +1,20 @@
+<!-- Three-part Greeting Badge -->
+<div class="container my-4">
+    <% names.forEach(name => { %>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-4 shadow-sm" style="background: linear-gradient(90deg, #0F3B47, #08525e); border-radius: 20px;">
+        <!-- Left: Greeting -->
+        <div class="mb-3 mb-md-0 text-white">
+            <h3 class="mb-1">Welcome, <strong><%= name.author_name %></strong>!</h3>
+            <p class="mb-0" style="color: rgb(177, 169, 169);">
+            Glad to see you back.
+            </p>
+        </div>
+        <!-- Right: About Info -->
+        <div class="text-white" style="max-width: 400px;">
+            <h5 class="mb-2">You're</h5>
+            <p style="color: rgb(177, 169, 169);"><%= name.author_about %></p>
+        </div>
+
+        </div>
+    <% }); %>
+</div>

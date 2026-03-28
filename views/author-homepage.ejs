@@ -1,174 +1,522 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="/main.css" />
-        <!-- External links for bootstrap & icon library -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <title>Author Home-Page</title>
-    </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MiniBlogger | Dashboard</title>
 
-    <body style="background: #1B2631;">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/main.css" />
 
-        <!-- Header -->
-        <header class="navbar navbar-expand-lg navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
-            <!-- Left: Back button -->
-            <a href="/blog/back-to-homepage" class="btn btn-outline-light btn-sm mr-3">
-                <i class="fa fa-arrow-circle-left"></i> Back
-            </a>
-            <!-- Center: Logo -->
-            <div class="mx-auto text-center">
-                <%- include('partials/logo') %>
-            </div>
-            <!-- Right: Settings -->
-            <a href="/blog/settings" class="text-light" style="font-size: 24px;">
-                <i class="fa fa-gear fa-spin"></i>
-            </a>
-        </header>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
 
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0d1117;
+      background-image:
+        radial-gradient(ellipse at 20% 55%, rgba(99,179,237,.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 15%, rgba(154,117,234,.05) 0%, transparent 55%);
+      min-height: 100vh;
+      margin: 0;
+      color: #f0f6fc;
+    }
 
-        <!-- Main content -->
-        <main class="container text-white">
+    /* ─── Header ─── */
+    .site-header {
+      background: rgba(13,17,23,.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-            <!-- Three-part Greeting Badge -->
-            <div class="container my-4">
-                <% names.forEach(name => { %>
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center p-4 shadow-sm" style="background: linear-gradient(90deg, #0F3B47, #08525e); border-radius: 20px;">
-                    <!-- Left: Greeting -->
-                    <div class="mb-3 mb-md-0 text-white">
-                        <h3 class="mb-1">Welcome, <strong><%= name.author_name %></strong>!</h3>
-                        <p class="mb-0" style="color: rgb(177, 169, 169);">
-                        Glad to see you back.
-                        </p>
-                    </div>
-                    <!-- Right: About Info -->
-                    <div class="text-white" style="max-width: 400px;">
-                        <h5 class="mb-2">You're</h5>
-                        <p style="color: rgb(177, 169, 169);"><%= name.author_about %></p>
-                    </div>
+    .site-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      color: #fff;
+      letter-spacing: -.02em;
+      margin: 0;
+    }
+    .site-logo span { color: #63b3ed; }
 
-                    </div>
-                <% }); %>
-            </div>
+    .btn-logout {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.1);
+      color: #8b949e;
+      font-family: 'Inter', sans-serif;
+      font-size: .8rem;
+      font-weight: 500;
+      padding: .38rem .85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .btn-logout:hover { border-color: rgba(248,81,73,.5); color: #ffa198; background: rgba(248,81,73,.07); }
 
-            
-            <!-- Section listing draft blogs with options to edit, delete, or publish -->
-            <div class="container my-5">
-                <hr class="my-4 bg-dark">
-                <h4>Drafts</h4>
-                <hr class="my-4 bg-light">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Title</th>
-                                <th scope="col">Created</th>
-                                <th scope="col">Modified</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <!-- Data is being received from the database when the webpage is being rendered -->
-                        <tbody>
-                            <% drafted.forEach(blog=> { %>
-                                <tr style="color: rgb(177, 169, 169); background: #08525e; transition: background 0.3s;">
-                                    <td>
-                                        <%= blog.blog_title %>
-                                    </td>
-                                    <td>
-                                        <%= blog.createdAgo %>
-                                    </td>
-                                    <td>
-                                        <%= blog.modifiedAgo || 'N/A' %>
-                                    </td>
-                                    <td>
-                                        <!-- Button for deleting blog from draft section a post route is handling this task by deleting this blog from the sql table -->
-                                        <form action="/blog/delete-blog" method="post" style="display:inline;">
-                                            <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                        <!-- A link to redirect the user to the blog's edit page handled by a route to redirect the user -->
-                                        <a href="/blog/edit-blog/<%= blog.blog_id %>"
-                                            class="btn btn-primary btn-sm">Edit</a>
-                                        <!-- A button to publish the blog means deleting them from the current section and sql table where that is stored and add them to publish blog sql table -->
-                                        <form action="/blog/publish-blog" method="post" style="display:inline;">
-                                            <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
-                                            <button type="submit" class="btn btn-success btn-sm">Publish</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                        </tbody>
-                    </table>
-                    <!-- For redirecting the user to create draft page inorder to add a new blog in the database and to display that on author homepage -->
-                    <a href="/blog/create-draft" class="btn btn-primary">Create</a>
-                </div>
-            </div>
+    .icon-settings {
+      color: #8b949e;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: color .2s, transform .3s;
+      display: flex;
+      align-items: center;
+    }
+    .icon-settings:hover { color: #63b3ed; transform: rotate(60deg); }
 
+    /* ─── Main ─── */
+    .dashboard-layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
 
-            <!-- Section listing published blogs -->
-            <div class="container my-5">
-                <hr class="my-4 bg-dark">
-                <h4>Published</h4>
-                <hr class="my-4 bg-light">
-                <div class="table-responsive">
-                    <table class="table table-hover table-dark shadow-sm rounded">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Title</th>
-                                <th scope="col">Created</th>
-                                <th scope="col">Modified</th>
-                                <th scope="col">Published</th>
-                                <th scope="col">Reads</th>
-                                <th scope="col">Likes</th>
-                                <th scope="col">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Data is being received from the database when the webpage is being rendered -->
-                            <% published.forEach(blog=> { %>
-                                <tr class="text-white tr-light" style="background: #08525e; transition: background 0.3s;">
-                                    <td>
-                                        <%= blog.blog_title %>
-                                    </td>
-                                    <td>
-                                        <%= blog.createdAgo %>
-                                    </td>
-                                    <td>
-                                        <%= blog.modifiedAgo || 'N/A' %>
-                                    </td>
-                                    <td>
-                                        <%= blog.publishedAgo %>
-                                    </td>
-                                    <td>
-                                        <%= blog.blog_reads %>
-                                    </td>
-                                    <td>
-                                        <%= blog.blog_likes %>
-                                    </td>
-                                    <td>
-                                        <!-- Deleting the published blog from the publised section and published sql table -->
-                                        <form action="/blog/delete-publishedblog" method="post" style="display:inline;">
-                                            <input type="hidden" name="publish_id" value="<%= blog.publish_id %>">
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
-                                        <!-- For redirecting the user to the blog's page to view the blog handled by a route to redirect to a specified page -->
-                                        <form action="/blog/reader-blog/<%= blog.publish_id %>" method="get"
-                                            style="display:inline;">
-                                            <button type="submit" class="btn btn-primary btn-sm">View</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <% }); %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-        </main>
+    /* ─── Flash messages ─── */
+    .flash-msg {
+      border-radius: 8px;
+      font-size: .84rem;
+      padding: .65rem .9rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      animation: slideUp .4s ease both;
+    }
+    .flash-success { background: rgba(22,163,74,.1); border: 1px solid rgba(22,163,74,.3); color: #86efac; }
+    .flash-error   { background: rgba(248,81,73,.1);  border: 1px solid rgba(248,81,73,.3);  color: #ffa198; }
+    .flash-close   { margin-left: auto; background: none; border: none; color: inherit; opacity: .6; cursor: pointer; font-size: 1rem; line-height: 1; }
+    .flash-close:hover { opacity: 1; }
 
-    </body>
+    /* ─── Welcome card ─── */
+    .welcome-card {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      padding: 2rem 2.25rem;
+      margin-bottom: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 20px 50px rgba(0,0,0,.4);
+      animation: slideUp .5s cubic-bezier(.22,1,.36,1) both;
+      position: relative;
+      overflow: hidden;
+    }
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, #63b3ed, #9a75ea);
+      border-radius: 3px 0 0 3px;
+    }
 
+    .welcome-left .greeting {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      color: #f0f6fc;
+      margin-bottom: .25rem;
+    }
+    .welcome-left .greeting span { color: #63b3ed; }
+    .welcome-left .sub { font-size: .82rem; color: #8b949e; font-weight: 300; margin: 0; }
+
+    .welcome-right { text-align: right; max-width: 380px; }
+    .bio-label {
+      font-size: .7rem;
+      font-weight: 600;
+      color: #63b3ed;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .4rem;
+    }
+    .bio-text { font-size: .85rem; color: #8b949e; font-weight: 300; line-height: 1.6; margin: 0; }
+
+    /* ─── Section heading ─── */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      margin-bottom: .75rem;
+      animation: slideUp .4s ease both;
+    }
+    .section-heading h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: #f0f6fc;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+    }
+    .section-heading h4 .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #63b3ed;
+      display: inline-block;
+    }
+    .section-heading h4 .dot.amber { background: #d97706; }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,.07);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ─── Table card ─── */
+    .table-card {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 20px 50px rgba(0,0,0,.35);
+      animation: slideUp .5s cubic-bezier(.22,1,.36,1) .08s both;
+    }
+
+    .table-card table { width: 100%; border-collapse: collapse; }
+
+    .table-card thead tr {
+      background: #0d1117;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .table-card thead th {
+      padding: .8rem 1.2rem;
+      font-size: .7rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #8b949e;
+      text-align: left;
+    }
+
+    .table-card tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      transition: background .2s;
+    }
+    .table-card tbody tr:last-child { border-bottom: none; }
+    .table-card tbody tr:hover { background: rgba(99,179,237,.04); }
+
+    .table-card tbody td {
+      padding: .95rem 1.2rem;
+      font-size: .875rem;
+      color: #f0f6fc;
+      vertical-align: middle;
+    }
+    .table-card tbody td.muted { color: #8b949e; font-size: .82rem; font-weight: 300; }
+
+    .empty-row td {
+      text-align: center;
+      color: #484f58;
+      padding: 2.5rem;
+      font-size: .85rem;
+    }
+    .empty-row td i { display: block; font-size: 1.8rem; margin-bottom: .5rem; }
+
+    /* ─── Stat badges ─── */
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 6px;
+      padding: .2rem .55rem;
+      font-size: .8rem;
+      color: #8b949e;
+    }
+
+    /* ─── Action buttons ─── */
+    .actions { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
+
+    .btn-act {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .78rem;
+      font-weight: 500;
+      padding: .35rem .8rem;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .18s;
+      white-space: nowrap;
+      letter-spacing: .02em;
+    }
+    .btn-act:hover { text-decoration: none; transform: translateY(-1px); }
+
+    .btn-danger { background: rgba(248,81,73,.08); border-color: rgba(248,81,73,.25); color: #ffa198; }
+    .btn-danger:hover { background: rgba(248,81,73,.15); border-color: rgba(248,81,73,.5); color: #ffa198; }
+
+    .btn-blue { background: rgba(99,179,237,.08); border-color: rgba(99,179,237,.25); color: #63b3ed; }
+    .btn-blue:hover { background: rgba(99,179,237,.15); border-color: rgba(99,179,237,.5); color: #90cdf4; }
+
+    .btn-green { background: rgba(22,163,74,.08); border-color: rgba(22,163,74,.25); color: #86efac; }
+    .btn-green:hover { background: rgba(22,163,74,.15); border-color: rgba(22,163,74,.5); color: #86efac; }
+
+    /* ─── Table footer ─── */
+    .table-footer {
+      padding: .9rem 1.2rem;
+      border-top: 1px solid rgba(255,255,255,.07);
+      background: #0d1117;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-footer .count { font-size: .78rem; color: #484f58; }
+
+    .btn-create {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: linear-gradient(135deg, #1d6fa4, #2563eb);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      font-weight: 600;
+      padding: .5rem 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s, transform .15s;
+      letter-spacing: .02em;
+    }
+    .btn-create:hover { opacity: .9; transform: translateY(-1px); color: #fff; text-decoration: none; }
+
+    /* ─── Animation ─── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .welcome-card { flex-direction: column; align-items: flex-start; }
+      .welcome-right { text-align: left; max-width: 100%; }
+      .table-card thead th:nth-child(2),
+      .table-card thead th:nth-child(3),
+      .table-card tbody td:nth-child(2),
+      .table-card tbody td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <form method="POST" action="/blog/logout" style="margin:0;">
+      <button type="submit" class="btn-logout">
+        <i class="fa fa-sign-out"></i> Logout
+      </button>
+    </form>
+
+    <div class="site-logo">Mini<span>Blogger</span></div>
+
+    <a href="/blog/settings" class="icon-settings">
+      <i class="fa fa-gear"></i>
+    </a>
+  </header>
+
+  <!-- Dashboard -->
+  <div class="dashboard-layout">
+
+    <!-- Flash Messages -->
+    <% if (typeof messages !== 'undefined') { %>
+      <% if (messages.success && messages.success.length > 0) { %>
+        <div class="flash-msg flash-success">
+          <i class="fa fa-check-circle"></i>
+          <%= messages.success[0] %>
+          <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+      <% } %>
+      <% if (messages.error && messages.error.length > 0) { %>
+        <div class="flash-msg flash-error">
+          <i class="fa fa-exclamation-circle"></i>
+          <%= messages.error[0] %>
+          <button class="flash-close" onclick="this.parentElement.remove()">&times;</button>
+        </div>
+      <% } %>
+    <% } %>
+
+    <!-- Welcome card -->
+    <div class="welcome-card">
+      <div class="welcome-left">
+        <h2 class="greeting">Welcome back, <span><%= names[0].name %></span></h2>
+        <p class="sub">Here's what's happening with your blog today.</p>
+      </div>
+      <div class="welcome-right">
+        <div class="bio-label">About you</div>
+        <p class="bio-text"><%= names[0].about || 'Update your bio by clicking the settings icon.' %></p>
+      </div>
+    </div>
+
+    <!-- ── Drafts ── -->
+    <div class="section-heading">
+      <h4><span class="dot amber"></span> Drafts</h4>
+    </div>
+    <hr class="section-divider">
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Created</th>
+            <th>Modified</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (drafted && drafted.length > 0) { %>
+            <% drafted.forEach(blog => { %>
+              <tr>
+                <td><%= blog.blog_title %></td>
+                <td class="muted"><%= blog.createdAgo %></td>
+                <td class="muted"><%= blog.modifiedAgo || '—' %></td>
+                <td>
+                  <div class="actions">
+                    <form action="/blog/delete-blog" method="post" style="display:inline;">
+                      <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
+                      <button type="submit" class="btn-act btn-danger">
+                        <i class="fa fa-trash"></i> Delete
+                      </button>
+                    </form>
+                    <a href="/blog/edit-blog/<%= blog.blog_id %>" class="btn-act btn-blue">
+                      <i class="fa fa-pencil"></i> Edit
+                    </a>
+                    <form action="/blog/publish-blog" method="post" style="display:inline;">
+                      <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
+                      <button type="submit" class="btn-act btn-green">
+                        <i class="fa fa-globe"></i> Publish
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr class="empty-row">
+              <td colspan="4">
+                <i class="fa fa-file-text-o"></i>
+                No drafts yet
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span class="count">
+          <%= (drafted && drafted.length) ? drafted.length + ' draft' + (drafted.length !== 1 ? 's' : '') : '0 drafts' %>
+        </span>
+        <a href="/blog/create-draft" class="btn-create">
+          <i class="fa fa-plus"></i> New Draft
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Published ── -->
+    <div class="section-heading">
+      <h4><span class="dot"></span> Published</h4>
+    </div>
+    <hr class="section-divider">
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Created</th>
+            <th>Modified</th>
+            <th>Published</th>
+            <th>Reads</th>
+            <th>Likes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (published && published.length > 0) { %>
+            <% published.forEach(blog => { %>
+              <tr>
+                <td><%= blog.blog_title %></td>
+                <td class="muted"><%= blog.createdAgo %></td>
+                <td class="muted"><%= blog.modifiedAgo || '—' %></td>
+                <td class="muted"><%= blog.publishedAgo %></td>
+                <td>
+                  <span class="stat-badge">
+                    <i class="fa fa-eye"></i> <%= blog.blog_reads %>
+                  </span>
+                </td>
+                <td>
+                  <span class="stat-badge">
+                    <i class="fa fa-heart"></i> <%= blog.blog_likes %>
+                  </span>
+                </td>
+                <td>
+                  <div class="actions">
+                    <form action="/blog/delete-publishedblog" method="post"
+                          onsubmit="return confirm('Delete this blog permanently? This cannot be undone!');"
+                          style="display:inline;">
+                      <input type="hidden" name="blog_id" value="<%= blog.blog_id %>">
+                      <button type="submit" class="btn-act btn-danger">
+                        <i class="fa fa-trash"></i> Delete
+                      </button>
+                    </form>
+                    <a href="/blog/reader-blog/<%= blog.blog_id %>" class="btn-act btn-blue">
+                      <i class="fa fa-external-link"></i> View
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr class="empty-row">
+              <td colspan="7">
+                <i class="fa fa-newspaper-o"></i>
+                No published blogs yet
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span class="count">
+          <%= (published && published.length) ? published.length + ' post' + (published.length !== 1 ? 's' : '') + ' published' : '0 posts published' %>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Auto-dismiss flash messages after 3 seconds
+    document.querySelectorAll('.flash-msg').forEach(flash => {
+      setTimeout(() => {
+        flash.style.transition = 'opacity .5s ease, transform .5s ease';
+        flash.style.opacity = '0';
+        flash.style.transform = 'translateY(-6px)';
+        setTimeout(() => flash.remove(), 500);
+      }, 3000);
+    });
+  </script>
+
+</body>
 </html>

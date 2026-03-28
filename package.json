@@ -6,10 +6,10 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-db": "cat db_schema.sql | sqlite3 database.db",
-    "clean-db": "rm database.db",
-    "build-db-win": "sqlite3 database.db < db_schema.sql",
-    "clean-db-win": "del database.db"
+    "build-db": "cat ./db/db_schema.sql | sqlite3 ./db/blog.db",
+    "clean-db": "rm ./db/blog.db",
+    "build-db-win": "sqlite3 ./db/blog.db < ./db/db_schema.sql",
+    "clean-db-win": "del .\\db\\blog.db"
   },
   "keywords": [],
   "author": "",
@@ -20,12 +20,23 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "dayjs": "^1.11.18",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "express-validator": "^7.2.1",
+    "quill": "^2.0.3",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.11.0",
+    "dotenv": "^17.2.4",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "nodemon": "^3.1.11"
   }
 }

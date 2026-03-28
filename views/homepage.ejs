@@ -4,79 +4,430 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MiniBlogger | Home</title>
+  <title>MiniBlogger | Account</title>
 
-  <!-- Bootstrap & Font Awesome -->
+  <!-- Bootstrap & Font Awesome (same versions you already use) -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ─── Reset / Base ─── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0d1117;
+      background-image:
+        radial-gradient(ellipse at 20% 55%, rgba(99,179,237,.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 15%, rgba(154,117,234,.05) 0%, transparent 55%);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* ─── Header ─── */
+    .site-header {
+      background: rgba(13,17,23,.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .site-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      color: #fff;
+      letter-spacing: -.02em;
+      margin: 0;
+    }
+
+    .site-logo span { color: #63b3ed; }
+
+    /* ─── Layout ─── */
+    .auth-layout {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+
+    /* ─── Card ─── */
+    .auth-card {
+      background: #161b22;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 445px;
+      padding: 2.5rem 2.25rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,.03), 0 28px 64px rgba(0,0,0,.55);
+      animation: slideUp .5s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* ─── Brand mark ─── */
+    .card-brand {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .brand-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px; height: 54px;
+      background: linear-gradient(135deg, #1e3a5f, #2d4a7a);
+      border-radius: 14px;
+      margin-bottom: .85rem;
+      box-shadow: 0 4px 18px rgba(99,179,237,.2);
+    }
+
+    .brand-icon i { font-size: 1.4rem; color: #63b3ed; }
+
+    .card-brand h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      color: #f0f6fc;
+      margin-bottom: .3rem;
+    }
+
+    .card-brand p {
+      font-size: .82rem;
+      color: #8b949e;
+      font-weight: 300;
+      margin: 0;
+    }
+
+    /* ─── Flash error ─── */
+    .flash-error {
+      background: rgba(248,81,73,.1);
+      border: 1px solid rgba(248,81,73,.3);
+      border-radius: 8px;
+      color: #ffa198;
+      font-size: .84rem;
+      padding: .65rem .9rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    /* ─── Tabs ─── */
+    .auth-tabs {
+      display: flex;
+      background: #0d1117;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.75rem;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #8b949e;
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      font-weight: 500;
+      padding: .55rem .75rem;
+      border-radius: 7px;
+      cursor: pointer;
+      letter-spacing: .02em;
+      transition: background .2s, color .2s, box-shadow .2s;
+    }
+
+    .auth-tab-btn.active {
+      background: #21262d;
+      color: #f0f6fc;
+      box-shadow: 0 1px 4px rgba(0,0,0,.45);
+    }
+
+    /* ─── Pane visibility ─── */
+    .tab-pane-custom          { display: none; }
+    .tab-pane-custom.active   { display: block; }
+
+    /* ─── Form pieces ─── */
+    .form-group-custom { margin-bottom: 1.05rem; }
+
+    .form-label-custom {
+      display: block;
+      font-size: .73rem;
+      font-weight: 600;
+      color: #8b949e;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .38rem;
+    }
+
+    .input-custom {
+      width: 100%;
+      background: #0d1117;
+      border: 1.5px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      color: #f0f6fc;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      padding: .65rem .9rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      -webkit-appearance: none;
+    }
+
+    .input-custom::placeholder { color: #484f58; }
+
+    .input-custom:focus {
+      border-color: #63b3ed;
+      box-shadow: 0 0 0 3px rgba(99,179,237,.15);
+    }
+
+    select.input-custom option { background: #0d1117; }
+
+    .form-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,.07);
+      margin: 1.2rem 0;
+    }
+
+    /* ─── Buttons ─── */
+    .btn-submit {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: .88rem;
+      font-weight: 600;
+      padding: .7rem 1rem;
+      cursor: pointer;
+      letter-spacing: .02em;
+      margin-top: .5rem;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .btn-submit:hover  { opacity: .9; transform: translateY(-1px); }
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-blue   { background: linear-gradient(135deg,#1d6fa4,#2563eb); }
+    .btn-green  { background: linear-gradient(135deg,#1a6e3f,#16a34a); }
+    .btn-amber  { background: linear-gradient(135deg,#92400e,#d97706); }
+
+    /* ─── Forgot password ─── */
+    .forgot-toggle {
+      background: none;
+      border: none;
+      color: #63b3ed;
+      font-family: 'Inter', sans-serif;
+      font-size: .8rem;
+      cursor: pointer;
+      padding: 0;
+      margin-top: .85rem;
+      display: block;
+      width: 100%;
+      text-align: center;
+      transition: color .2s;
+    }
+
+    .forgot-toggle:hover { color: #90cdf4; }
+
+    .forgot-panel {
+      display: none;
+      margin-top: 1.2rem;
+      padding: 1.2rem;
+      background: rgba(99,179,237,.04);
+      border: 1px solid rgba(99,179,237,.15);
+      border-radius: 10px;
+      animation: slideUp .3s ease both;
+    }
+
+    .forgot-panel.open { display: block; }
+
+    .forgot-panel-title {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #63b3ed;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: .9rem;
+    }
+  </style>
 </head>
 
-<body style="background-color: #1B2631;">
+<body>
 
   <!-- Header -->
-  <header class="navbar navbar-dark" style="background: #1B2631; padding: 0.75rem 2rem; box-shadow: 0 2px 6px rgba(0,0,0,0.3); border-radius: 0 0 15px 15px;">
-    <div class="mx-auto">
-      <%- include('partials/logo') %>
-    </div>
+  <header class="site-header">
+    <div class="site-logo">Mini<span>Blogger</span></div>
   </header>
 
-  <!-- Main Content -->
-  <main class="container text-center mt-5">
-    <div class="mb-5">
-      <h1 class="text-info font-weight-bold">Welcome to MiniBlogger</h1>
-      <p class="text-light mt-3 mb-4 lead">
-        Write, share, and explore blogs — all in one place.
-      </p>
-    </div>
+  <!-- Main -->
+  <div class="auth-layout">
+    <div class="auth-card">
 
-    <!-- Cards Section -->
-    <div class="row justify-content-center">
+      <!-- Brand -->
+      <div class="card-brand">
+        <div class="brand-icon"><i class="fa fa-pencil"></i></div>
+        <h2>Welcome back</h2>
+        <p>Sign in to your account or create a new one</p>
+      </div>
 
-      <!-- Author Section -->
-      <div class="col-md-5 mb-4">
-        <div class="card shadow-lg border-0 h-100" style="background-color: #08525e; border-radius: 15px;">
-          <div class="card-body">
-            <i class="fa fa-pencil fa-3x mb-3 text-light"></i>
-            <h4 class="card-title text-light">Author Home</h4>
-            <p class="text-light mt-3">
-               Write and publish your own blogs.
-            </p>
-            <a href="/blog/author-homepage" class="btn btn-info btn-lg mt-3 rounded-pill px-4">
-              Go to Author Home
-            </a>
+      <!-- Flash messages -->
+      <% if (messages && messages.error && messages.error.length > 0) { %>
+        <div class="flash-error">
+          <i class="fa fa-exclamation-circle"></i>
+          <%= messages.error[0] %>
+        </div>
+      <% } %>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-login"    onclick="switchTab('login')"    type="button">Sign In</button>
+        <button class="auth-tab-btn"        id="tab-register" onclick="switchTab('register')" type="button">Create Account</button>
+      </div>
+
+      <!-- ── Login Pane ── -->
+      <div class="tab-pane-custom active" id="pane-login">
+        <form action="/blog/login" method="POST">
+
+          <div class="form-group-custom">
+            <label for="login-username" class="form-label-custom">Username</label>
+            <input type="text" class="input-custom" id="login-username" name="username" placeholder="Enter your username" required>
           </div>
+
+          <div class="form-group-custom">
+            <label for="login-password" class="form-label-custom">Password</label>
+            <input type="password" class="input-custom" id="login-password" name="password" placeholder="Enter your password" required>
+          </div>
+
+          <button type="submit" class="btn-submit btn-blue">
+            Sign In &nbsp;<i class="fa fa-arrow-right"></i>
+          </button>
+        </form>
+
+        <!-- Forgot password toggle -->
+        <button class="forgot-toggle" onclick="toggleForgot()" type="button">
+          Forgot your password?
+        </button>
+
+        <!-- Forgot password panel -->
+        <div class="forgot-panel" id="forgotPanel">
+          <div class="forgot-panel-title"><i class="fa fa-lock"></i>&nbsp; Reset Password</div>
+          <form action="/blog/forgot-password?form=forgot" method="POST">
+
+            <div class="form-group-custom">
+              <label for="forgot-email" class="form-label-custom">Email Address</label>
+              <input type="email" class="input-custom" id="forgot-email" name="email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="form-group-custom">
+              <label for="forgot-new-password" class="form-label-custom">New Password</label>
+              <input type="password" class="input-custom" id="forgot-new-password" name="newPassword" placeholder="Choose a new password" required>
+            </div>
+
+            <div class="form-group-custom">
+              <label for="forgot-security" class="form-label-custom">Security Answer — What city were you born in?</label>
+              <input type="text" class="input-custom" id="forgot-security" name="securityAnswer" placeholder="Your answer" required>
+            </div>
+
+            <button type="submit" class="btn-submit btn-amber">
+              Reset Password &nbsp;<i class="fa fa-refresh"></i>
+            </button>
+          </form>
         </div>
       </div>
 
-      <!-- Reader Section -->
-      <div class="col-md-5 mb-4">
-        <div class="card shadow-lg border-0 h-100" style="background-color: #08525e; border-radius: 15px;">
-          <div class="card-body">
-            <i class="fa fa-book fa-3x mb-3 text-light"></i>
-            <h4 class="card-title text-light">Reader Home</h4>
-            <p class="text-light mt-3">
-              Discover and enjoy blogs from others.
-            </p>
-            <a href="/blog/reader-homepage" class="btn btn-info btn-lg mt-3 rounded-pill px-4">
-              Go to Reader Home
-            </a>
+      <!-- ── Register Pane ── -->
+      <div class="tab-pane-custom" id="pane-register">
+        <form action="/blog/register?form=register" method="POST">
+
+          <div class="form-group-custom">
+            <label for="reg-fullname" class="form-label-custom">Full Name</label>
+            <input type="text" class="input-custom" id="reg-fullname" name="fullname" placeholder="Your full name" required>
           </div>
-        </div>
+
+          <div class="form-group-custom">
+            <label for="reg-email" class="form-label-custom">Email Address</label>
+            <input type="email" class="input-custom" id="reg-email" name="email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group-custom">
+            <label for="reg-password" class="form-label-custom">Password</label>
+            <input type="password" class="input-custom" id="reg-password" name="password" placeholder="Create a strong password" required>
+          </div>
+
+          <div class="form-group-custom">
+            <label for="reg-role" class="form-label-custom">Join as</label>
+            <select class="input-custom" id="reg-role" name="role" required>
+              <option value="author">✍️  Author — write &amp; publish posts</option>
+              <option value="reader">📖  Reader — explore &amp; follow</option>
+            </select>
+          </div>
+
+          <hr class="form-divider">
+
+          <div class="form-group-custom">
+            <label for="reg-security-answer" class="form-label-custom">Security Answer — What city were you born in?</label>
+            <input type="text" class="input-custom" id="reg-security-answer" name="securityAnswer" placeholder="Used for password recovery" required>
+          </div>
+
+          <button type="submit" class="btn-submit btn-green">
+            Create Account &nbsp;<i class="fa fa-check"></i>
+          </button>
+        </form>
       </div>
 
     </div>
+  </div>
 
-    <!-- Short Tip Section -->
-    <div class="mt-5 text-light">
-      <p class="lead mb-0">
-        💡 <strong>Blogging is a conversation, not a code.</strong> 
-      </p>
-    </div>
-  </main>
-
-  <!-- Bootstrap JS -->
+  <!-- Bootstrap JS (same versions) -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-pane-custom').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.auth-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('pane-' + tab).classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    function toggleForgot() {
+      document.getElementById('forgotPanel').classList.toggle('open');
+    }
+
+    // Auto-dismiss flash error after 3 seconds
+  const flash = document.querySelector('.flash-error');
+  if (flash) {
+    setTimeout(() => {
+      flash.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+      flash.style.opacity = '0';
+      flash.style.transform = 'translateY(-6px)';
+      setTimeout(() => flash.remove(), 500);
+    }, 3000);
+  }
+
+  // On page load — restore the section that caused the error
+  // by reading which form action was submitted via a hidden query param
+  const params = new URLSearchParams(window.location.search);
+  const fromSection = params.get('from');
+
+  if (flash) {
+    if (fromSection === 'forgot') {
+      // Stay on login tab but re-open the forgot panel
+      document.getElementById('forgotPanel').classList.add('open');
+    } else if (fromSection === 'register') {
+      // Switch to register tab
+      switchTab('register');
+    }
+  }
+  </script>
 
 </body>
 </html>
