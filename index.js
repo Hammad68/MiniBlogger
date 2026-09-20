@@ -5,7 +5,6 @@
 
 // Set up express, bodyparser and EJS
 const express = require('express');
-const session = require('express-session');
 const app = express();
 const port = 3000;
 var bodyParser = require("body-parser");
@@ -15,15 +14,6 @@ app.use(express.static(__dirname + '/public')); // set location of static files
 
 // Database connection
 const db = require('./db');
-
-// Session setup
-app.use(session ({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    // Optional
-    cookie: {maxAge: 24 * 60 *60 * 60 * 1000} 
-}));
 
 // Route for the main homepage
 app.get('/', (req, res) => {
