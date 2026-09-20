@@ -41,17 +41,17 @@ It lets authors create and share blogs while readers can explore, like, and comm
 
 ## ⚡ Getting Started
 
-### 1️⃣ Clone and Install
+### 1️⃣ Clone the repo
 ```bash
 git clone https://github.com/Hammad68/MiniBlogger.git
 cd MiniBlogger
-npm install
 ```
 
-### 2️⃣ Run Locally
+### 2️⃣ Run the containerized app locally using docker
 ```bash
-npm start
+docker compose build --up -d
 ```
+
 - Then visit 👉 http://localhost:3000
 - 🗂️ The database file (database.db) will be auto-created automatically if missing.
 
