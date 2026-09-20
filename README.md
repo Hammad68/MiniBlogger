@@ -48,8 +48,9 @@ cd MiniBlogger
 ```
 
 ### 2️⃣ Run the containerized app locally using docker
+**Prerequisite:** Docker must be installed on the system. 
 ```bash
-docker compose build --up -d
+docker compose up --build -d
 ```
 
 - Then visit 👉 http://localhost:3000
