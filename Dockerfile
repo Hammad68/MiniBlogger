@@ -22,15 +22,15 @@ COPY package*.json ./
 # Clean install the dependencies, omitting dev dependencies for production.
 RUN npm ci --omit=dev
 
+# Copy the rest of the source files into the image.
+COPY . .
+
 # Create the data folder where the SQLite database will be stored. And grant the non-root user permission to write to it.
 RUN mkdir -p /usr/src/app/data && chown -R node:node /usr/src/app/data
-
 
 # Run the application as a non-root user.
 USER node
 
-# Copy the rest of the source files into the image.
-COPY . .
 
 # Expose the port that the application listens on.
 EXPOSE 3000
