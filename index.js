@@ -6,7 +6,7 @@
 // Set up express, bodyparser and EJS
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs'); // set the app to use ejs for rendering
