@@ -31,6 +31,9 @@ USER node
 # Copy the rest of the source files into the image.
 COPY . .
 
+# Create the data folder where the SQLite database will be stored.
+RUN mkdir -p /usr/src/app/data
+
 # Expose the port that the application listens on.
 EXPOSE 3000
 
