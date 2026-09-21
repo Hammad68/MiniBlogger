@@ -19,10 +19,8 @@ WORKDIR /usr/src/app
 # Copy the package.json and package-lock.json files into the image.
 COPY package*.json ./
 
-# Leverage a cache mount to /root/.npm to speed up subsequent builds.
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
-
+# Clean install the dependencies, omitting dev dependencies for production.
+RUN npm ci --omit=dev
 
 # Create the data folder where the SQLite database will be stored. And grant the non-root user permission to write to it.
 RUN mkdir -p /usr/src/app/data && chown -R node:node /usr/src/app/data
